@@ -1,17 +1,18 @@
 package com.andrewkats.katsprint.calc;
 
 import com.andrewkats.katsprint.data.Paper;
+import com.andrewkats.katsprint.data.Price;
 
 public final class PaperPriceCalc
 {
     public static int getPrice(Paper.Size size, Paper.Type type, Paper.Sided sided)
     {
-        if(size == null ||type == null || sided == null) return Paper.PRICE_INVALID;
+        if(size == null || type == null || sided == null) return Price.PRICE_INVALID;
         
         switch(size)
         {
             case A4: return getPriceA4(type, sided);
-            default: return Paper.PRICE_INVALID;
+            default: return Price.PRICE_INVALID;
         }
     }
 
@@ -19,9 +20,9 @@ public final class PaperPriceCalc
     {
         switch(type)
         {
-            case BLACKWHITE: return Paper.Price.A4_BLACK.getPrice(sided);
-            case COLOR: return Paper.Price.A4_COLOR.getPrice(sided);
-            default: return Paper.PRICE_INVALID;
+            case BLACKWHITE: return Price.A4_BLACK.getPrice(sided);
+            case COLOR: return Price.A4_COLOR.getPrice(sided);
+            default: return Price.PRICE_INVALID;
         }
     }
 }
