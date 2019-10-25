@@ -1,18 +1,18 @@
 package com.andrewkats.katsprint.data;
 
-public final class Paper
+public enum Paper
 {
     // Support for other paper sizes.
-    public static enum Size
-    {
-        A4
-    };
+    A4(Price.A4_BLACK, Price.A4_COLOR);
 
     // Support for special ink types.
     // NOTE: We are using "COLOR" to increase readability.
-    public static enum Type
+    public final Price BLACK;
+    public final Price COLOR;
+
+    Paper(Price black, Price color) 
     {
-        BLACK,
-        COLOR
-    };
+        this.BLACK = black;
+        this.COLOR = color;
+    }
 }

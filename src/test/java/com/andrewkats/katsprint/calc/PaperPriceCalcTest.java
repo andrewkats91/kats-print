@@ -13,7 +13,7 @@ public class PaperPriceCalcTest
     public void testGetPriceNullCheck()
     {
         int expected = Price.PRICE_INVALID;
-        int actual = PaperPriceCalc.getPrice(null, null, null);
+        int actual = PaperPriceCalc.getPrice(null, false);
         Assert.assertEquals(expected, actual);
     }
     
@@ -21,7 +21,7 @@ public class PaperPriceCalcTest
     public void testGetPriceTargeted()
     {
         int expected = Price.A4_COLOR.SINGLE;
-        int actual = PaperPriceCalc.getPrice(Paper.Size.A4, Paper.Type.COLOR, false);
+        int actual = PaperPriceCalc.getPrice(Paper.A4.COLOR, false);
         Assert.assertEquals(expected, actual);
     }
 }
