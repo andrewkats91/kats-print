@@ -1,9 +1,9 @@
 package com.andrewkats.katsprint.data;
 
-// Change internal pricing here.
-// Use PRICE_INVALID to set a price as unavaliable.
 public enum Price
 {
+    // Change internal pricing here.
+    // Use PRICE_INVALID to set a price as unavaliable.
     A4_BLACK (15, 10),
     A4_COLOR (25, 20);
 
@@ -19,25 +19,14 @@ public enum Price
     public final static int PRICE_INVALID = -1;
     
 
+
     // Price Internal
-    private final int priceSingle;
-    private final int priceDouble;
+    public final int SINGLE;
+    public final int DOUBLE;
 
-    private Price(int priceSingle, int priceDouble) 
+    private Price(int SINGLE, int DOUBLE) 
     {
-        this.priceSingle = priceSingle;
-        this.priceDouble = priceDouble;
-    }
-    
-    public int getPrice(Paper.Sided sided) 
-    {
-        if(sided == null) return PRICE_INVALID;
-
-        switch(sided)
-        {
-            case SINGLE: return priceSingle;
-            case DOUBLE: return priceDouble;
-            default: return PRICE_INVALID;
-        }
+        this.SINGLE = SINGLE;
+        this.DOUBLE = DOUBLE;
     }
 };

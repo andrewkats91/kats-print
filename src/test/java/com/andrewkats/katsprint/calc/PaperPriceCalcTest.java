@@ -20,8 +20,8 @@ public class PaperPriceCalcTest
     @Test
     public void testGetPriceTargeted()
     {
-        int expected = Price.A4_COLOR.getPrice(Paper.Sided.SINGLE);
-        int actual = PaperPriceCalc.getPrice(Paper.Size.A4, Paper.Type.COLOR, Paper.Sided.SINGLE);
+        int expected = Price.A4_COLOR.SINGLE;
+        int actual = PaperPriceCalc.getPrice(Paper.Size.A4, Paper.Type.COLOR, false);
         Assert.assertEquals(expected, actual);
     }
 }
