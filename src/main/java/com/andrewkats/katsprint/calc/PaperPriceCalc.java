@@ -10,10 +10,12 @@ public final class PaperPriceCalc
         if(paper == null) return Price.PRICE_INVALID;
 
         int blackPagesCount = totalPagesCount - colorPagesCount;
+        if(blackPagesCount < 0) return Price.PRICE_INVALID;
         
         int totalPrice = 0;
         totalPrice += getPrice(paper.BLACK, isDoubleSided) * blackPagesCount;
         totalPrice += getPrice(paper.COLOR, isDoubleSided) * colorPagesCount;
+        if(totalPrice <= 0) return Price.PRICE_INVALID;
         return totalPrice;
     }
 
@@ -22,6 +24,6 @@ public final class PaperPriceCalc
         if(priceGroup == null) return Price.PRICE_INVALID;
         
         if(isDoubleSided) return priceGroup.DOUBLE;
-        else return priceGroup.SINGLE;
+        return priceGroup.SINGLE;
     }
 }
