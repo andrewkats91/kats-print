@@ -10,7 +10,7 @@ Contains methods and tools for calculations and processing.
 Contains data types and object structure related information.
 Change internal pricing and other data related aspects here.
 ### parsing
-Currently not implemented.
+Contains functions for reading in local files and processing data into a readable format for use in print job calculations.
 
 ## Technologies
 Ensure you have install the required technologies and they are functioning correctly.
