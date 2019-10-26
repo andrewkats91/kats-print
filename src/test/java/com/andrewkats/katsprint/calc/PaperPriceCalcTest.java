@@ -11,8 +11,8 @@ public class PaperPriceCalcTest
     @Test
     public void getJobPrice_standardJobFormat()
     {
-        int expected = Paper.A4.BLACK.SINGLE + Paper.A4.COLOR.SINGLE;
-
+        int expected = Paper.A4.BLACK.SINGLE.PRICE + Paper.A4.COLOR.SINGLE.PRICE;
+        
         Paper tPaper = Paper.A4;
         boolean isDoubleSided = false;
         int totalPages = 2;
@@ -43,14 +43,6 @@ public class PaperPriceCalcTest
     {
         int expected = Price.PRICE_INVALID;
         int actual = PaperPriceCalc.getJobPrice(Paper.A4, false, -2, -5);
-        Assert.assertEquals(expected, actual);
-    }
-    
-    @Test
-    public void getJobPrice_incompletePaperObject()
-    {
-        int expected = Price.PRICE_INVALID;
-        int actual = PaperPriceCalc.getJobPrice(Paper.NULL, false, 2, 1);
         Assert.assertEquals(expected, actual);
     }
 

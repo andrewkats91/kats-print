@@ -6,14 +6,24 @@ import org.junit.Test;
 public class PaperTest 
 {
     @Test
-    public void test_noPaperPrice()
+    public void test_noNullPaperType()
     {
-        Assert.assertEquals(Price.NONE, Paper.NONE.BLACK);
+        Paper.Type actual = Paper.NONE.BLACK; 
+        Assert.assertNotNull(actual);
     }
 
     @Test
-    public void test_nullPaper()
+    public void test_noNullPaperTypePrice()
     {
-        Assert.assertNull(Paper.NULL.BLACK);
+        Paper.Type.Side actual = Paper.NONE.BLACK.SINGLE; 
+        Assert.assertNotNull(actual);
+    }
+
+    @Test
+    public void test_paperTypePriceInvalid()
+    {
+        int expected = Price.PRICE_INVALID;
+        int actual = Paper.NONE.BLACK.SINGLE.PRICE; 
+        Assert.assertEquals(expected, actual);
     }
 }

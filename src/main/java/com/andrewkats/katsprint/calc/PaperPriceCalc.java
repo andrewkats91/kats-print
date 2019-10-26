@@ -19,11 +19,11 @@ public final class PaperPriceCalc
         return totalPrice;
     }
 
-    private static int getPrice(Price priceGroup, boolean isDoubleSided)
+    private static int getPrice(Paper.Type paperType, boolean isDoubleSided)
     {
-        if(priceGroup == null) return Price.PRICE_INVALID;
+        if(paperType == null) return Price.PRICE_INVALID;
         
-        if(isDoubleSided) return priceGroup.DOUBLE;
-        return priceGroup.SINGLE;
+        if(isDoubleSided) return paperType.DOUBLE.PRICE;
+        return paperType.SINGLE.PRICE;
     }
 }

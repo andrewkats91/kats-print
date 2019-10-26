@@ -2,19 +2,42 @@ package com.andrewkats.katsprint.data;
 
 public enum Paper
 {
-    // Support for other paper sizes.
-    A4(Price.A4_BLACK, Price.A4_COLOR),
-    NONE(Price.NONE, Price.NONE),
-    NULL(null, null);
+    // Add additional paper sizes here.
+    // Use PRICE_INVALID to set as unavaliable.
+    A4(Price.A4_BLACK_SINGLE, Price.A4_BLACK_DOUBLE, Price.A4_COLOR_SINGLE, Price.A4_COLOR_DOUBLE),
+    NONE(Price.PRICE_INVALID, Price.PRICE_INVALID, Price.PRICE_INVALID, Price.PRICE_INVALID);
 
-    // Support for special ink types.
+    // Add additional print types here.
     // NOTE: We are using "COLOR" to increase readability.
-    public final Price BLACK;
-    public final Price COLOR;
+    public final Type BLACK;
+    public final Type COLOR;
 
-    Paper(Price black, Price color) 
+    private Paper(int blackSingle, int blackDouble, int colorSingle, int colorDouble) 
     {
-        this.BLACK = black;
-        this.COLOR = color;
+        this.BLACK = new Type(blackSingle, blackDouble);
+        this.COLOR = new Type(colorSingle, colorDouble);
+    }
+    
+    public final class Type
+    {
+        public final Side SINGLE;
+        public final Side DOUBLE;
+
+        private Type(int priceSingle, int priceDouble)
+        {
+            this.SINGLE = new Side(priceSingle);
+            this.DOUBLE = new Side(priceDouble);
+        }
+    
+        public final class Side
+        {
+            public final int PRICE;
+    
+            private Side(int tPrice)
+            {
+                if(tPrice <= 0) tPrice = Price.PRICE_INVALID;
+                this.PRICE = tPrice;
+            }
+        }
     }
 }
