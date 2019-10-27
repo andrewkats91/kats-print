@@ -19,6 +19,8 @@ public final class Price
     public final static int PRICE_INVALID = -1;
 
 
+
+    // Price Utility returns value in dollar format.
     public final static String toDollar(float price)
     {
         int formatVal = 1 + CENT_VALUE;
@@ -28,7 +30,6 @@ public final class Price
         float priceDollars = priceCents / 100f;
         return "$" + String.format("%." + formatVal + "f", priceDollars);
     }
-
 
     // Internal
     private Price()

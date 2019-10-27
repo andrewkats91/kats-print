@@ -10,10 +10,24 @@ public final class PrintJobInfoLog
 {
     public static int logLevel = 0;
     
+    public static void setLogLevelByString (String logLevelStr)
+    {
+        if(logLevelStr == null)
+        {
+            logLevel = 0;
+            return;
+        }
+        
+        if(logLevelStr.contains("0")) logLevel = 0;
+        if(logLevelStr.contains("1")) logLevel = 1;
+        if(logLevelStr.contains("2")) logLevel = 2;
+    }
+
     public static void logJobListInfo(List<PrintJob> printJobList)
     {
         if(logLevel >= 2) return;
 
+        System.out.println(" ");
         System.out.println("JOB LIST - Jobs: " + printJobList.size());
         System.out.println("========================================");
     }

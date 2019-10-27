@@ -1,5 +1,6 @@
 package com.andrewkats.katsprint.parser;
 
+import com.andrewkats.katsprint.calc.PrintJobInfoLog;
 import com.andrewkats.katsprint.data.PrintJob;
 
 import java.io.FileReader;
@@ -15,9 +16,32 @@ public class FileLoader
 
     public List<PrintJob> readPrintJobs(String filePath)
     {
-        if(filePath == null) return null;
-        if(filePath.isEmpty()) return null;
+        boolean validPath = true;
+        if(filePath == null) validPath = false;
+        else if(filePath.isEmpty()) validPath = false;
+        
+        // If no valid path entered, request input from user.
+        if(!validPath)
+        {
+            filePath = JobConsole.readLine("Please enter the path to the target CSV file: ");
 
+            if(filePath == null) validPath = false;
+            else if(filePath.isEmpty()) validPath = false;
+            else validPath = true;
+
+            if(!validPath)
+            {
+                System.out.println("No file path entered. Exiting application..");
+                return null;
+            }
+            else
+            {
+                String logLev = JobConsole.readLine("Please enter the desired output detail (0 - 2 | Default is 0): ");
+                PrintJobInfoLog.setLogLevelByString(logLev);
+            }
+        }
+
+        
         // Required data types.
         List<PrintJob> printJobList = null;
         List<String> stringData = null;

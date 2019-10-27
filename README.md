@@ -10,14 +10,15 @@ After creating the .JAR file, open console and navigate to the file directory if
 
 The default location of the package is the ```targets/``` folder.
 
-Ensure you enter the location of a valid CSV file as a parameter, such as in the example above.
+Ensure you enter the location of a valid CSV file as a parameter, such as in the example above. A ```sample.csv``` has been provided in the ```examples/``` folder.
 
-A ```sample.csv``` has been provided in the ```examples/``` folder.
+Entering a value of 0-2 as a second parameter will allow you to change the detail of the information output.
+
+NOTE: If you do not enter any parameters, you will be prompted to enter a valid CSV file path when starting the application.
+
 ```
 java -jar katsprint-*.jar sample.csv
 ```
-
-Entering a value of 0-2 as a second parameter will allow you to change the detail of the information output.
 
 ## Project Layout
 
@@ -32,6 +33,7 @@ Contains methods and tools for calculations and processing.
 
 Contains data types and object structure related information.
 Change internal pricing and other data related aspects here.
+You can add more page sizes via the Paper data class.
 
 ### parsing
 
