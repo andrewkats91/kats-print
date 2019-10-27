@@ -79,7 +79,7 @@ public class PaperPriceCalcTest
         testJob.addTask(Paper.A4.COLOR, false, 1);
         
         int expected = Price.PRICE_INVALID;
-        int actual = PaperPriceCalc.getTaskPrice(testJob.jobList().get(0));
+        int actual = PaperPriceCalc.getTaskPrice(testJob.taskList().get(0));
         Assert.assertEquals(expected, actual);
     }
 }

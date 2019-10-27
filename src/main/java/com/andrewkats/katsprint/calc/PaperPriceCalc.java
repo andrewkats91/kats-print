@@ -33,13 +33,13 @@ public final class PaperPriceCalc
     {
         if(printJob == null) return Price.PRICE_INVALID;
 
-        int jobSize = printJob.jobList().size();
+        int jobSize = printJob.taskList().size();
         if(jobSize <= 0) return Price.PRICE_INVALID;
 
         int totalPrice = 0;
         for(int i = 0; i < jobSize; i++)
         {
-            PrintTask tPrintTask = printJob.jobList().get(i);
+            PrintTask tPrintTask = printJob.taskList().get(i);
             int paperPrice = getTaskPrice(tPrintTask);
             totalPrice += paperPrice;
 

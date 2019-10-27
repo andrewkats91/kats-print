@@ -5,18 +5,18 @@ import java.util.ArrayList;
 
 public class PrintJob
 {
-    private List<PrintTask> jobList = new ArrayList<>();
+    private List<PrintTask> taskList = new ArrayList<>();
      
     public boolean addTask(Paper.Type paperType, boolean isDoubleSided, int pageCount)
     {
-        if(jobList == null) return false;
+        if(taskList == null) return false;
         if(paperType == null) return false;
         if(pageCount <= 0) return false;
 
-        return jobList.add(new PrintTask(paperType, isDoubleSided, pageCount));
+        return taskList.add(new PrintTask(paperType, isDoubleSided, pageCount));
     }
 
-    public List<PrintTask> jobList() { return jobList; }
+    public List<PrintTask> taskList() { return taskList; }
     
     // Contains the information for a single print task.
     // A task supports a single page size, type and side setting.

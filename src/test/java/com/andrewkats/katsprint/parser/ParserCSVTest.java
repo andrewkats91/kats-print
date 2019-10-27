@@ -51,8 +51,8 @@ public class ParserCSVTest
     }
     private boolean compareJobs(PrintJob jobA, PrintJob jobB)
     {
-        int testSize = jobA.jobList().size();
-        if(testSize != jobB.jobList().size())
+        int testSize = jobA.taskList().size();
+        if(testSize != jobB.taskList().size())
         {
             System.out.println("FAILED | compareJobs: Different sizes detected");
             return false;
@@ -60,7 +60,7 @@ public class ParserCSVTest
 
         for(int i = 0; i < testSize; i++)
         {
-            if(!compareTasks(jobA.jobList().get(i), jobB.jobList().get(i)))
+            if(!compareTasks(jobA.taskList().get(i), jobB.taskList().get(i)))
             {
                 System.out.println("While comparing jobs, task comparison failed at index: " + i);
             }
