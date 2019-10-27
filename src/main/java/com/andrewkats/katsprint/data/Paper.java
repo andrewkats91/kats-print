@@ -9,33 +9,39 @@ public enum Paper
 
     // Add additional print types here.
     // NOTE: We are using "COLOR" to increase readability.
+    public final String NAME;
     public final Type BLACK;
     public final Type COLOR;
 
     private Paper(int blackSingle, int blackDouble, int colorSingle, int colorDouble) 
     {
-        this.BLACK = new Type(blackSingle, blackDouble);
-        this.COLOR = new Type(colorSingle, colorDouble);
+        NAME = name();
+        this.BLACK = new Type(NAME + " BLACK", blackSingle, blackDouble);
+        this.COLOR = new Type(NAME + " COLOR", colorSingle, colorDouble);
     }
     
     public final class Type
     {
+        public final String NAME;
         public final Side SINGLE;
         public final Side DOUBLE;
 
-        private Type(int priceSingle, int priceDouble)
+        private Type(String NAME, int priceSingle, int priceDouble)
         {
-            this.SINGLE = new Side(priceSingle);
-            this.DOUBLE = new Side(priceDouble);
+            this.NAME = NAME;
+            this.SINGLE = new Side(NAME + " SINGLE", priceSingle);
+            this.DOUBLE = new Side(NAME + " DOUBLE", priceDouble);
         }
     
         public final class Side
         {
+            public final String NAME;
             public final int PRICE;
     
-            private Side(int tPrice)
+            private Side(String NAME, int tPrice)
             {
                 if(tPrice <= 0) tPrice = Price.PRICE_INVALID;
+                this.NAME = NAME;
                 this.PRICE = tPrice;
             }
         }

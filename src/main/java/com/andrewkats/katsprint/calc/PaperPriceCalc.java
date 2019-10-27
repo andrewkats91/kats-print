@@ -16,16 +16,30 @@ public final class PaperPriceCalc
         int jobListSize = printJobList.size();
         if(jobListSize <= 0) return Price.PRICE_INVALID;
 
+        // Call initial info logger.
+        PrintJobInfoLog.logJobListInfo(printJobList);
+        
         int totalPrice = 0;
         for(int i = 0; i < jobListSize; i++)
         {
             PrintJob tPrintJob = printJobList.get(i);
+
+            // Call job info logger.
+            PrintJobInfoLog.logJobInfo(i, tPrintJob);
+            
             int jobPrice = getJobPrice(tPrintJob);
             totalPrice += jobPrice;
+
+            // Call end-of-job info logger.
+            PrintJobInfoLog.logJobInfoEnd(i, tPrintJob, jobPrice);
 
             // Perform a validation check to ensure correct data.
             if(jobPrice <= 0 || jobPrice == Price.PRICE_INVALID) return Price.PRICE_INVALID;
         }
+
+        // Call final info logger.
+        PrintJobInfoLog.logJobListInfoEnd(printJobList, totalPrice);
+
         return totalPrice; 
     }
 
@@ -40,6 +54,10 @@ public final class PaperPriceCalc
         for(int i = 0; i < jobSize; i++)
         {
             PrintTask tPrintTask = printJob.taskList().get(i);
+
+            // Call job info logger.
+            PrintJobInfoLog.logTaskInfo(i, tPrintTask);
+
             int paperPrice = getTaskPrice(tPrintTask);
             totalPrice += paperPrice;
 

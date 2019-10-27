@@ -36,5 +36,15 @@ public class PrintJob
         public Paper.Type paperType() { return paperType; }
         public boolean isDoubleSided() { return isDoubleSided; }
         public int pageCount() { return pageCount; }
+
+        public String[] toStringArray()
+        {
+            return new String[]
+            {
+                paperType.toString(),
+                String.valueOf(isDoubleSided),
+                String.valueOf(pageCount)
+            };
+        }
     }
 }

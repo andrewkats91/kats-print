@@ -19,7 +19,17 @@ public final class Price
     public final static int PRICE_INVALID = -1;
 
 
-    
+    public final static String toDollar(float price)
+    {
+        int formatVal = 1 + CENT_VALUE;
+        if(formatVal > 4) formatVal = 4;
+
+        float priceCents = price / Price.CENT_VALUE;
+        float priceDollars = priceCents / 100f;
+        return "$" + String.format("%." + formatVal + "f", priceDollars);
+    }
+
+
     // Internal
     private Price()
     {
