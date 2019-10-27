@@ -1,6 +1,18 @@
 # kats-print
 A simple console application to calculate predefined print costs.
 
+## How To run
+In order to run the project, you must first build the package using maven.
+After creating the .JAR file, open console and navigate to the file directory if required.
+The default location of the package is the ```targets/``` folder.
+
+In order to run the project in console:
+```
+java -jar katsprint-*.jar sample.csv
+```
+Ensure you enter the location of a valid CSV file as a parameter, such as in the example above.
+A ```sample.csv``` has been provided in the ```examples/``` folder.
+
 ## Project Layout
 Core src files located at: ```src/main/java/com/andrewkats/katsprint```
 The project is split into three key sections.

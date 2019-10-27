@@ -46,7 +46,7 @@ public final class PaperPriceCalc
             // Perform a validation check to ensure correct data.
             if(paperPrice <= 0 || paperPrice == Price.PRICE_INVALID) return Price.PRICE_INVALID;
         }
-        return totalPrice; 
+        return totalPrice;
     }
     
     protected static int getTaskPrice(PrintTask printTask) 

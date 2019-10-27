@@ -11,39 +11,42 @@ import java.util.List;
 
 public class FileLoader
 {
+    private BufferedReader fileReader;
+
     public List<PrintJob> readPrintJobs(String filePath)
     {
+        if(filePath == null) return null;
+        if(filePath.isEmpty()) return null;
+
         // Required data types.
-        BufferedReader fileReader = null;
-        List<PrintJob> nPrintQueue = null;
+        List<PrintJob> printJobList = null;
         List<String> stringData = null;
 
         // Try and read the target file.
-        try 
+        tryReadTargetFile(filePath);
+
+        // If file reading failed, try a different way. 
+        if(fileReader == null) tryReadTargetFile(filePath + ".csv");
+
+        // If the file seems valid, try and retrieve all file data.
+        if(fileReader == null)
         {
-			fileReader = new BufferedReader(new FileReader(filePath));
-        } 
-        catch (FileNotFoundException e) 
-        {
+            System.out.println("Could not read input file. Please ensure target path is correct.");
             return null;
         }
 
-        // If the file seems valid, try and retrieve all file data.
-        if(fileReader != null)
+        try
         {
-            try
+            stringData = new ArrayList<>();
+            String line;
+            while ((line = fileReader.readLine()) != null) 
             {
-                stringData = new ArrayList<>();
-                String line;
-                while ((line = fileReader.readLine()) != null) 
-                {
-                    stringData.add(line);
-                }
+                stringData.add(line);
             }
-            catch (IOException e)
-            {
-                return null;
-            }
+        }
+        catch (IOException e)
+        {
+            return null;
         }
 
         // Finish up and close the reader.
@@ -53,15 +56,27 @@ public class FileLoader
         } 
         catch (IOException e) 
         {
-			e.printStackTrace();
+            System.out.println("An error occured while closing the input file.");
         }
         
         // If data exists, create a new parser and process the data.
         if(stringData != null)
         {
-            nPrintQueue = new ParserCSV().parseData(stringData);
+            printJobList = new ParserCSV().parseData(stringData);
         }
     
-        return nPrintQueue;
+        return printJobList;
+    }
+
+    private void tryReadTargetFile(String filePath)
+    {
+        try 
+        {
+			fileReader = new BufferedReader(new FileReader(filePath));
+        } 
+        catch (FileNotFoundException e) 
+        {
+            fileReader = null;
+        }
     }
 }
