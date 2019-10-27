@@ -5,9 +5,31 @@ import com.andrewkats.katsprint.data.Price;
 import com.andrewkats.katsprint.data.PrintJob;
 import com.andrewkats.katsprint.data.PrintJob.PrintTask;
 
+import java.util.List;
+
 public final class PaperPriceCalc
 {
-    public static int getJobPrice(PrintJob printJob) 
+    public static int getJobListPrice(List<PrintJob> printJobList) 
+    {
+        if(printJobList == null) return Price.PRICE_INVALID;
+
+        int jobListSize = printJobList.size();
+        if(jobListSize <= 0) return Price.PRICE_INVALID;
+
+        int totalPrice = 0;
+        for(int i = 0; i < jobListSize; i++)
+        {
+            PrintJob tPrintJob = printJobList.get(i);
+            int jobPrice = getJobPrice(tPrintJob);
+            totalPrice += jobPrice;
+
+            // Perform a validation check to ensure correct data.
+            if(jobPrice <= 0 || jobPrice == Price.PRICE_INVALID) return Price.PRICE_INVALID;
+        }
+        return totalPrice; 
+    }
+
+    protected static int getJobPrice(PrintJob printJob) 
     {
         if(printJob == null) return Price.PRICE_INVALID;
 

@@ -4,11 +4,40 @@ import com.andrewkats.katsprint.data.Paper;
 import com.andrewkats.katsprint.data.Price;
 import com.andrewkats.katsprint.data.PrintJob;
 
+import java.util.ArrayList;
+import java.util.List;
 import org.junit.Assert;
 import org.junit.Test;
 
 public class PaperPriceCalcTest 
 {
+    @Test
+    public void getJobListPrice_standardJobFormat()
+    {
+        int expected = Paper.A4.BLACK.SINGLE.PRICE + Paper.A4.COLOR.DOUBLE.PRICE;
+        
+        List<PrintJob> testJobList = new ArrayList<>();
+        
+        PrintJob jobA = new PrintJob();
+        jobA.addTask(Paper.A4.BLACK, false, 1);
+        testJobList.add(jobA);
+
+        PrintJob jobB = new PrintJob();
+        jobB.addTask(Paper.A4.COLOR, true, 1);
+        testJobList.add(jobB);
+
+        int actual = PaperPriceCalc.getJobListPrice(testJobList);
+        Assert.assertEquals(expected, actual);
+    }
+
+    @Test
+    public void getJobListPrice_nullCheck()
+    {
+        int expected = Price.PRICE_INVALID;
+        int actual = PaperPriceCalc.getJobListPrice(null);
+        Assert.assertEquals(expected, actual);
+    }
+    
     @Test
     public void getJobPrice_standardJobFormat()
     {
@@ -19,7 +48,6 @@ public class PaperPriceCalcTest
         testJob.addTask(Paper.A4.COLOR, false, 1);
         
         int actual = PaperPriceCalc.getJobPrice(testJob);
-
         Assert.assertEquals(expected, actual);
     }
 
