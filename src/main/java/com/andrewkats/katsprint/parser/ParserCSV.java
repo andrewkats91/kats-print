@@ -9,10 +9,49 @@ import java.util.List;
 public class ParserCSV
 {
     private List<PrintJob> jobList;
+    private int columnTotalIndex;
+    private int columnColorIndex;
+    private int columnSidedIndex;
+    private int columnSizesIndex;
+
 
     public List<PrintJob> parseData(List<String> stringData) 
     {
-        jobList = new ArrayList<PrintJob>();
+        if(stringData == null) return null;
+
+        // Ensure data is reset.
+        resetParser();
+
+        // Ensure CSV input data is split correctly.
+        List<String[]> dataSet = splitCSVLines(stringData);
+
+        // Try and allocate columns.
+        String[] line = dataSet.get(0);
+        columnSearchHeader(line);
+
+        // If we failed to find the 3 key columns, return null.
+        if(columnTotalIndex == -1 || columnColorIndex == -1 || columnSidedIndex == -1)
+        {
+            return null;
+        }
+
+        // Attempt to add a job for each valid entry detected. 
+        for(int i = 0; i < dataSet.size(); i++)
+        {
+            line = dataSet.get(i);
+            if(line != null)
+            {
+                cleanUpData(line);
+                addJob(line);
+            }
+        }
+            
+        return jobList;
+    }
+
+    private List<String[]> splitCSVLines(List<String> stringData) 
+    {
+        List<String[]> dataSet = new ArrayList<String[]>();
 
         for(int i = 0; i < stringData.size(); i++)
         {
@@ -20,54 +59,84 @@ public class ParserCSV
             if(isValidFormat(line))
             {
                 String[] data = line.split(",");
-                cleanUpData(data);
-                addJob(data);
+                dataSet.add(data);
             }
         }
 
-        return jobList;
+        return dataSet;
     }
 
-    private boolean isValidFormat(String inData)
+    private void resetParser()
     {
-        if(inData == null) return false;
-        return inData.contains(",");
+        jobList = new ArrayList<PrintJob>();
+        columnColorIndex = -1;
+        columnTotalIndex = -1;
+        columnSidedIndex = -1;
+        columnSizesIndex = -1;
     }
 
-    void cleanUpData(String[] data)
+    // Basic Search - Check if there is a header with valid columns.
+    protected void columnSearchHeader(String[] data)
+    {
+        for(int i = 0; i < data.length; i++)
+        {
+            if(data[i].toUpperCase().contains("TOTAL PAGES")) columnTotalIndex = i;
+            else if(data[i].toUpperCase().contains("COLOR PAGES")) columnColorIndex = i;
+            else if(data[i].toUpperCase().contains("DOUBLE SIDED")) columnSidedIndex = i;
+            else if(data[i].toUpperCase().contains("PAGE SIZE")) columnSizesIndex = i;
+        }
+    }
+
+    protected void cleanUpData(String[] data)
     {
         // For our numeric columns, always remove other characters.
-        data[0] = data[0].replaceAll("[^\\d.]", "");
-        data[1] = data[1].replaceAll("[^\\d.]", "");
+        data[columnTotalIndex] = data[columnTotalIndex].replaceAll("[^\\d.]", "");
+        data[columnColorIndex] = data[columnColorIndex].replaceAll("[^\\d.]", "");
 
         // For double sided check, remove any extra spaces.
-        data[2] = data[2].replaceAll("\\s+","");
+        data[columnSidedIndex] = data[columnSidedIndex].replaceAll("\\s+","");
+        
+        // Clean up paper size data if in use.
+        if(columnSizesIndex != -1) 
+        {
+            data[columnSizesIndex] = data[columnSizesIndex].replaceAll("\\s+","");
+        }
+        
     }
 
     private boolean addJob(String[] data)
     {
         // Ensure the changed data is still valid.
-        if(data[0].isEmpty() || data[1].isEmpty() || data[2].isEmpty()) return false;
+        if(data[columnTotalIndex].isEmpty() || data[columnColorIndex].isEmpty() || data[columnSidedIndex].isEmpty()) return false;
 
         // Check if true false or invalid.
-        int dSidedCheck = parseDoubleSided(data[2]);
+        int dSidedCheck = parseDoubleSided(data[columnSidedIndex]);
         if(dSidedCheck <= -1) return false;
 
 
-
-        // Begin producing valid job data.
+        // Begin producing job data.
         Paper paper = Paper.A4;
+        boolean isDoubleSided = dSidedCheck == 1;
         int totalPages = 0; 
         int colorPages = 0; 
-        boolean isDoubleSided = dSidedCheck == 1;
 
+        // If columnSizesIndex is set, override the type of paper being used.
+        if(columnSizesIndex != -1) 
+        {
+            paper = parsePaper(data[columnSizesIndex]);
+        }
+
+        // If we are using an invalid paper type, cancel this job addition.
+        if(paper == Paper.NONE)
+        {
+            return false;
+        }
+        
         // Try and parse in our ints.
         try
         {
-            // Get all required information.
-            totalPages = Integer.parseInt(data[0]);
-            colorPages = Integer.parseInt(data[1]);
-
+            totalPages = Integer.parseInt(data[columnTotalIndex]);
+            colorPages = Integer.parseInt(data[columnColorIndex]);
         }
         catch(NumberFormatException e)
         {
@@ -84,8 +153,20 @@ public class ParserCSV
 
         // Add a task for color pages.
         nPrintJob.addTask(paper.COLOR, isDoubleSided, colorPages);
+        
+        return jobList.add(nPrintJob);
+    }
 
-        return true;
+    // Values to look for when using paper size.
+    private Paper parsePaper(String val)
+    {
+        switch(val.toUpperCase())
+        {
+            case "A4":
+                return Paper.A4;
+            default:
+                return Paper.NONE;
+        }
     }
 
     // Values to look for when setting double sided.
@@ -106,5 +187,12 @@ public class ParserCSV
             default:
                 return -1;
         }
+    }
+
+    private boolean isValidFormat(String inData)
+    {
+        if(inData == null) return false;
+        if(inData.isEmpty()) return false;
+        return inData.contains(",");
     }
 }

@@ -59,8 +59,7 @@ public class FileLoader
         // If data exists, create a new parser and process the data.
         if(stringData != null)
         {
-            ParserCSV parser = new ParserCSV();
-            nPrintQueue = parser.parseData(stringData);
+            nPrintQueue = new ParserCSV().parseData(stringData);
         }
     
         return nPrintQueue;

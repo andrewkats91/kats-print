@@ -16,6 +16,8 @@ public class PrintJob
         return jobList.add(new PrintTask(paperType, isDoubleSided, pageCount));
     }
 
+    public List<PrintTask> jobList() { return jobList; }
+    
     // Contains the information for a single print task.
     // A task supports a single page size, type and side setting.
     public class PrintTask
@@ -27,7 +29,12 @@ public class PrintJob
         private PrintTask(Paper.Type paperType, boolean isDoubleSided, int pageCount)
         {
             this.paperType = paperType;
+            this.isDoubleSided = isDoubleSided;
             this.pageCount = pageCount;
         }
+
+        public Paper.Type paperType() { return paperType; }
+        public boolean isDoubleSided() { return isDoubleSided; }
+        public int pageCount() { return pageCount; }
     }
 }

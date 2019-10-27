@@ -2,6 +2,7 @@ package com.andrewkats.katsprint.parser;
 
 import com.andrewkats.katsprint.data.Paper;
 import com.andrewkats.katsprint.data.PrintJob;
+import com.andrewkats.katsprint.data.PrintJob.PrintTask;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,144 +29,152 @@ public class ParserCSVTest
         return expected;
     }
 
+    // Tools for testing.
+    private boolean compareJobLists(List<PrintJob> jobListA, List<PrintJob> jobListB)
+    {
+        int testSize = jobListA.size();
+        if(testSize != jobListB.size()) 
+        {
+            System.out.println("FAILED | compareJobLists: Different sizes detected");
+            return false;
+        }
+        
+        for(int i = 0; i < testSize; i++)
+        {
+            if(!compareJobs(jobListA.get(i), jobListB.get(i)))
+            {
+                return false;
+            }
+        }
+
+        return true;
+    }
+    private boolean compareJobs(PrintJob jobA, PrintJob jobB)
+    {
+        int testSize = jobA.jobList().size();
+        if(testSize != jobB.jobList().size())
+        {
+            System.out.println("FAILED | compareJobs: Different sizes detected");
+            return false;
+        }
+
+        for(int i = 0; i < testSize; i++)
+        {
+            if(!compareTasks(jobA.jobList().get(i), jobB.jobList().get(i)))
+            {
+                System.out.println("While comparing jobs, task comparison failed at index: " + i);
+            }
+        }
+
+        System.out.println("Comparing jobs success!");
+        return true;
+    }
+
+    private boolean compareTasks(PrintTask taskA, PrintTask taskB)
+    {
+        if(taskA.paperType() != taskB.paperType()) return false;
+        if(taskA.isDoubleSided() != taskB.isDoubleSided()) return false;
+        if(taskA.pageCount() != taskB.pageCount()) return false;
+
+        return true;
+    }
+
+    // Tests
     @Test
     public void test_handleInputNull() 
     {
-        ParserCSV parserCSV = new ParserCSV();
-        List<PrintJob> actual = parserCSV.parseData(null);
+        List<PrintJob> actual = new ParserCSV().parseData(null);
         Assert.assertNull(actual);
     }
 
     @Test
     public void test_handleInputNullListElements() 
     {
-        List<PrintJob> expected = getPrintJobList();
-
         List<String> testData = new ArrayList<>();
+        testData.add("Total Pages, Color Pages, Double Sided");
         testData.add(null);
         testData.add(null);
         testData.add("20, 10, false");
         testData.add(" 2,  1,  TRUE");
         testData.add(null);
-
-        ParserCSV parserCSV = new ParserCSV();
-        List<PrintJob> actual = parserCSV.parseData(testData);
-
-        Assert.assertArrayEquals(expected.toArray(), actual.toArray());
+        
+        List<PrintJob> jobList = new ParserCSV().parseData(testData);
+        Assert.assertTrue(compareJobLists(getPrintJobList(), jobList));
     }
 
     @Test
     public void test_handleInputEmptyList() 
     {
-        List<PrintJob> expected = getPrintJobList();
-
         List<String> testData = new ArrayList<>();
         testData.add("");
+        testData.add("Total Pages, Color Pages, Double Sided");
         testData.add("");
         testData.add("20, 10, false");
         testData.add(" 2,  1,  TRUE");
         testData.add("");
-
-        ParserCSV parserCSV = new ParserCSV();
-        List<PrintJob> actual = parserCSV.parseData(testData);
-
-        Assert.assertArrayEquals(expected.toArray(), actual.toArray());
+        
+        List<PrintJob> jobList = new ParserCSV().parseData(testData);
+        Assert.assertTrue(compareJobLists(getPrintJobList(), jobList));
     }
 
     // Included bad columns should be ignored.
     @Test
     public void test_handleInputBadData() 
     {
-        List<PrintJob> expected = getPrintJobList();
-
         List<String> testData = new ArrayList<>();
-        testData.add("      Test,   Invalid,     3Words1");
-        testData.add("  TesTRUEt, 3Wo44rds1,     3Words1");
-        testData.add("        20,        10,       false");
-        testData.add("         2,         1,        TRUE");
-        testData.add("2 TesTRUEt, 3Wo44rds1, 3TRUEWords1");
-
-        ParserCSV parserCSV = new ParserCSV();
-        List<PrintJob> actual = parserCSV.parseData(testData);
-
-        Assert.assertArrayEquals(expected.toArray(), actual.toArray());
+        testData.add("Total Pages, Color Pages, Double Sided");
+        testData.add("       Test,     Invalid,      3Words1");
+        testData.add("   TesTRUEt,   3Wo44rds1,      3Words1");
+        testData.add("         20,          10,        false");
+        testData.add("          2,           1,         TRUE");
+        testData.add(" 2 TesTRUEt,   3Wo44rds1,  3TRUEWords1");
+        
+        List<PrintJob> jobList = new ParserCSV().parseData(testData);
+        Assert.assertTrue(compareJobLists(getPrintJobList(), jobList));
     }
 
     // Regular Input but with extra detected columns
     @Test
     public void test_handleInputEmptyColumns() 
     {
-        List<PrintJob> expected = getPrintJobList();
-
         List<String> testData = new ArrayList<>();
+        testData.add("Total Pages, , , Color Pages, Double Sided");
         testData.add("20, , , 10, false, ");
         testData.add(" 2, , ,  1,  TRUE, ");
-
-        ParserCSV parserCSV = new ParserCSV();
-        List<PrintJob> actual = parserCSV.parseData(testData);
-
-        Assert.assertArrayEquals(expected.toArray(), actual.toArray());
+        
+        List<PrintJob> jobList = new ParserCSV().parseData(testData);
+        Assert.assertTrue(compareJobLists(getPrintJobList(), jobList));
     }
 
 
     // Regular Input
     @Test
-    public void test_handleInput() 
+    public void test_handleInputMissingHeader() 
     {
-        List<PrintJob> expected = getPrintJobList();
-
         List<String> testData = new ArrayList<>();
         testData.add("20, 10, false");
         testData.add(" 2,  1,  TRUE");
-
-        ParserCSV parserCSV = new ParserCSV();
-        List<PrintJob> actual = parserCSV.parseData(testData);
-
-        Assert.assertArrayEquals(expected.toArray(), actual.toArray());
+        
+        List<PrintJob> jobList = new ParserCSV().parseData(testData);
+        Assert.assertNull(jobList);
     }
 
     @Test
     public void test_handleInputHeader() 
     {
-        List<PrintJob> expected = getPrintJobList();
-
         List<String> testData = new ArrayList<>();
         testData.add("Total Pages, Color Pages, Double Sided");
         testData.add("         20,          10,        false");
         testData.add("          2,           1,         TRUE");
-
-        ParserCSV parserCSV = new ParserCSV();
-        List<PrintJob> actual = parserCSV.parseData(testData);
-
-        Assert.assertArrayEquals(expected.toArray(), actual.toArray());
-    }
-
-    // Input: Added page size column. NONE and empty columns should be ignored.
-    // But only ignore empty when the size column is detected.
-    @Test
-    public void test_handleInputPageSize() 
-    {
-        List<PrintJob> expected = getPrintJobList();
         
-        List<String> testData = new ArrayList<String>();
-        testData.add("20, 10, false, NONE");
-        testData.add(" 2,  1,  TRUE, NONE");
-        testData.add("20, 10, false,   A4");
-        testData.add(" 2,  1,  TRUE,   A4");
-        testData.add("20, 10, false,     ");
-
-        ParserCSV parserCSV = new ParserCSV();
-        List<PrintJob> actual = parserCSV.parseData(testData);
-
-        Assert.assertArrayEquals(expected.toArray(), actual.toArray());
+        List<PrintJob> jobList = new ParserCSV().parseData(testData);
+        Assert.assertTrue(compareJobLists(getPrintJobList(), jobList));
     }
 
     // Including a header
     @Test
     public void test_handleInputPageSizeHeader() 
     {
-        List<PrintJob> expected = getPrintJobList();
-        
         List<String> testData = new ArrayList<String>();
         testData.add("Total Pages, Color Pages, Double Sided, Page Size");
         testData.add("         20,          10,        false,      NONE");
@@ -174,75 +183,20 @@ public class ParserCSVTest
         testData.add("          2,           1,         TRUE,        A4");
         testData.add("         20,          10,        false,          ");
 
-        ParserCSV parserCSV = new ParserCSV();
-        List<PrintJob> actual = parserCSV.parseData(testData);
-
-        Assert.assertArrayEquals(expected.toArray(), actual.toArray());
-    }
-
-    // Input: Shuffled Columns
-    @Test
-    public void test_handleInputShuffled() 
-    {
-        List<PrintJob> expected = getPrintJobList();
-
-        List<String> testData = new ArrayList<>();
-        testData.add("10, false, 20");
-        testData.add(" 1,  TRUE,  2");
-
-        ParserCSV parserCSV = new ParserCSV();
-        List<PrintJob> actual = parserCSV.parseData(testData);
-
-        Assert.assertArrayEquals(expected.toArray(), actual.toArray());
+        List<PrintJob> jobList = new ParserCSV().parseData(testData);
+        Assert.assertTrue(compareJobLists(getPrintJobList(), jobList));
     }
 
     // Input: Shuffled and Header
     @Test
     public void test_handleInputShuffledHeader() 
     {
-        List<PrintJob> expected = getPrintJobList();
-
         List<String> testData = new ArrayList<>();
         testData.add("Color Pages, Double Sided, Total Pages");
         testData.add("         10,        false,          20");
         testData.add("          1,         TRUE,           2");
-
-        ParserCSV parserCSV = new ParserCSV();
-        List<PrintJob> actual = parserCSV.parseData(testData);
-
-        Assert.assertArrayEquals(expected.toArray(), actual.toArray());
-    }
-
-    // Input: Shuffled and Page Size
-    @Test
-    public void test_handleInputShuffledPageSize() 
-    {
-        List<PrintJob> expected = getPrintJobList();
         
-        List<String> testData = new ArrayList<String>();
-        testData.add("NONE, false,    20, 10");
-        testData.add("NONE,  TRUE,     2,  1");
-        testData.add("  A4, false,    20, 10");
-        testData.add("  A4,  TRUE,     2,  1");
-        testData.add("    , false,    20, 10");
-
-        ParserCSV parserCSV = new ParserCSV();
-        List<PrintJob> actual = parserCSV.parseData(testData);
-
-        Assert.assertArrayEquals(expected.toArray(), actual.toArray());
-    }
-
-    // Clean up data function test
-    @Test
-    public void test_cleanUpData() 
-    {
-        String[] expected = {"1", "3441", "3Word1s"};
-
-        String testData =  "  TesTRUEt1, 3Wo44rds1,     3Wo rd1s";
-        String[] actual = testData.split(",");
-        ParserCSV parserCSV = new ParserCSV();
-        parserCSV.cleanUpData(actual);
-        
-        Assert.assertArrayEquals(expected, actual);
+        List<PrintJob> jobList = new ParserCSV().parseData(testData);
+        Assert.assertTrue(compareJobLists(getPrintJobList(), jobList));
     }
 }
