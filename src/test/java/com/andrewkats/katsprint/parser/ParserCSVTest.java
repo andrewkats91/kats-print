@@ -81,14 +81,14 @@ public class ParserCSVTest
 
     // Tests
     @Test
-    public void test_handleInputNull() 
+    public void parseData_handleInputNull() 
     {
         List<PrintJob> actual = new ParserCSV().parseData(null);
         Assert.assertNull(actual);
     }
 
     @Test
-    public void test_handleInputNullListElements() 
+    public void parseData_handleInputNullListElements() 
     {
         List<String> testData = new ArrayList<>();
         testData.add("Total Pages, Color Pages, Double Sided");
@@ -103,7 +103,7 @@ public class ParserCSVTest
     }
 
     @Test
-    public void test_handleInputEmptyList() 
+    public void parseData_handleInputEmptyList() 
     {
         List<String> testData = new ArrayList<>();
         testData.add("");
@@ -119,7 +119,7 @@ public class ParserCSVTest
 
     // Included bad columns should be ignored.
     @Test
-    public void test_handleInputBadData() 
+    public void parseData_handleInputBadData() 
     {
         List<String> testData = new ArrayList<>();
         testData.add("Total Pages, Color Pages, Double Sided");
@@ -135,7 +135,7 @@ public class ParserCSVTest
 
     // Regular Input but with extra detected columns
     @Test
-    public void test_handleInputEmptyColumns() 
+    public void parseData_handleInputEmptyColumns() 
     {
         List<String> testData = new ArrayList<>();
         testData.add("Total Pages, , , Color Pages, Double Sided");
@@ -149,7 +149,7 @@ public class ParserCSVTest
 
     // Regular Input
     @Test
-    public void test_handleInputMissingHeader() 
+    public void parseData_handleInputMissingHeader() 
     {
         List<String> testData = new ArrayList<>();
         testData.add("20, 10, false");
@@ -160,7 +160,7 @@ public class ParserCSVTest
     }
 
     @Test
-    public void test_handleInputHeader() 
+    public void parseData_handleInputHeader() 
     {
         List<String> testData = new ArrayList<>();
         testData.add("Total Pages, Color Pages, Double Sided");
@@ -173,7 +173,7 @@ public class ParserCSVTest
 
     // Including a header
     @Test
-    public void test_handleInputPageSizeHeader() 
+    public void parseData_handleInputPageSizeHeader() 
     {
         List<String> testData = new ArrayList<String>();
         testData.add("Total Pages, Color Pages, Double Sided, Page Size");
@@ -189,7 +189,7 @@ public class ParserCSVTest
 
     // Input: Shuffled and Header
     @Test
-    public void test_handleInputShuffledHeader() 
+    public void parseData_handleInputShuffledHeader() 
     {
         List<String> testData = new ArrayList<>();
         testData.add("Color Pages, Double Sided, Total Pages");

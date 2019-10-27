@@ -7,7 +7,7 @@ import org.junit.Test;
 public class FileLoaderTest
 {
     @Test
-    public void test_handleEmptyFilePath() 
+    public void readPrintJobs_handleEmptyFilePath() 
     {
         FileLoader fileLoader = new FileLoader();
         assertNull(fileLoader.readPrintJobs(""));
