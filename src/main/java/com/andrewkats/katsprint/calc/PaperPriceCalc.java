@@ -2,21 +2,33 @@ package com.andrewkats.katsprint.calc;
 
 import com.andrewkats.katsprint.data.Paper;
 import com.andrewkats.katsprint.data.Price;
+import com.andrewkats.katsprint.data.PrintJob;
+import com.andrewkats.katsprint.data.PrintJob.PrintTask;
 
 public final class PaperPriceCalc
 {
-    public static int getJobPrice(Paper paper, Boolean isDoubleSided, int totalPagesCount, int colorPagesCount)
-    {
-        if(paper == null) return Price.PRICE_INVALID;
-
-        int blackPagesCount = totalPagesCount - colorPagesCount;
-        if(blackPagesCount < 0) return Price.PRICE_INVALID;
-        
+    public static int getJobPrice(PrintJob printJob) 
+    { 
+        int jobSize = printJob.jobList().size();
         int totalPrice = 0;
-        totalPrice += getPrice(paper.BLACK, isDoubleSided) * blackPagesCount;
-        totalPrice += getPrice(paper.COLOR, isDoubleSided) * colorPagesCount;
-        if(totalPrice <= 0) return Price.PRICE_INVALID;
-        return totalPrice;
+
+        for(int i = 0; i < jobSize; i++)
+        {
+            PrintTask tPrintTask = printJob.jobList().get(i);
+            totalPrice += getTaskPrice(tPrintTask);
+        }
+
+        return totalPrice; 
+    }
+    
+    protected static int getTaskPrice(PrintTask printTask) 
+    { 
+        if(printTask == null) return Price.PRICE_INVALID;
+
+        int paperPrice = getPrice(printTask.paperType(), printTask.isDoubleSided());
+        if(paperPrice <= 0) return Price.PRICE_INVALID;
+        
+        return paperPrice * printTask.pageCount();
     }
 
     private static int getPrice(Paper.Type paperType, boolean isDoubleSided)
