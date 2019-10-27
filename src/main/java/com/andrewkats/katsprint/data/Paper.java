@@ -7,6 +7,9 @@ public enum Paper
     A4(Price.A4_BLACK_SINGLE, Price.A4_BLACK_DOUBLE, Price.A4_COLOR_SINGLE, Price.A4_COLOR_DOUBLE),
     NONE(Price.PRICE_INVALID, Price.PRICE_INVALID, Price.PRICE_INVALID, Price.PRICE_INVALID);
 
+    // The default paper size to prompt if no size is found.
+    public final static Paper DEFAULT_SIZE = A4;
+
     // Add additional print types here.
     // NOTE: We are using "COLOR" to increase readability.
     public final String NAME;

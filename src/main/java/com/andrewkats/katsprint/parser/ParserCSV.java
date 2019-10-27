@@ -35,6 +35,21 @@ public class ParserCSV
             return null;
         }
 
+        // If we couldnt find the size column, then prompt the user about using the default size.
+        if(columnSizesIndex == -1)
+        {
+            String oStr = JobConsole.readLine("Warning: No paper size detected. Will fall back to default: " + Paper.DEFAULT_SIZE.NAME + ". Type N to cancel: ");
+            
+            if(oStr != null)
+            {
+                if(oStr.toUpperCase().contains("N")) 
+                {
+                    System.out.println("Job processing cancelled.");
+                    return null;
+                }
+            } 
+        }
+
         // Attempt to add a job for each valid entry detected. 
         for(int i = 0; i < dataSet.size(); i++)
         {
@@ -115,7 +130,7 @@ public class ParserCSV
 
 
         // Begin producing job data.
-        Paper paper = Paper.A4;
+        Paper paper = Paper.DEFAULT_SIZE;
         boolean isDoubleSided = dSidedCheck == 1;
         int totalPages = 0; 
         int colorPages = 0; 
@@ -165,8 +180,11 @@ public class ParserCSV
             case "A4":
                 return Paper.A4;
             default:
-                return Paper.NONE;
+                break;
         }
+
+        if(val == Paper.A4.NAME) return Paper.A4;
+        return Paper.NONE;
     }
 
     // Values to look for when setting double sided.
