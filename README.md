@@ -2,51 +2,29 @@
 
 A simple console application to calculate predefined print costs.
 
-## How To run
-
-In order to run the project, you must first build the package using maven.
-
-After creating the .JAR file, open console and navigate to the file directory if required.
-
-The default location of the package is the ```targets/``` folder.
-
-Ensure you enter the location of a valid CSV file as a parameter, such as in the example above. A ```sample.csv``` has been provided in the ```examples/``` folder.
-
-Entering a value of 0-2 as a second parameter will allow you to change the detail of the information output.
-
-NOTE: If you do not enter any parameters, you will be prompted to enter a valid CSV file path when starting the application.
-
-```
-java -jar katsprint-*.jar sample.csv
-```
 
 ## Project Layout
-
 Core src files located at: ```src/main/java/com/andrewkats/katsprint```
 The project is split into three key sections.
 
-### calc
-
+#### Calculations - calc
 Contains methods and tools for calculations and processing.
-
-### data
-
+#### Object Data - data
 Contains data types and object structure related information.
 Change internal pricing and other data related aspects here.
 You can add more page sizes via the Paper data class.
-
-### parsing
-
+#### Parsing and Processing - parser
 Contains functions for reading in local files and processing data into a readable format for use in print job calculations.
 
 ## Technologies
-
 Ensure you have install the required technologies and they are functioning correctly.
 
 * [Java SE Development Kit](https://www.oracle.com/technetwork/java/javase/downloads/index.html) (13.0.1)
 * [Maven](https://maven.apache.org/) (3.6.2)
 
 ## Building Package
+In order to run the project, you must first build the package using maven.
+The default location of the package is the ```targets/``` folder.
 
 To package into JAR:
 
@@ -55,14 +33,21 @@ mvn clean package
 ```
 
 ## Running Tests
-
 To run tests:
 
 ```
 mvn test
 ```
 
-## License
+## Running the JAR
+After creating the .JAR package, open console and navigate to the file directory if required.
+Ensure you enter the location of a valid CSV file as a parameter, such as in the example above. A ```sample.csv``` has been provided in the ```examples/``` folder.
+Entering a value of 0-2 as a second parameter will allow you to change the detail of output information.
 
+```
+java -jar katsprint-*.jar sample.csv
+```
+
+## License
 This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md) file for details
 
