@@ -38,21 +38,8 @@ public class PaperPriceCalcTest
         
         PrintJob testJob = new PrintJob();
         testJob.addTask(Paper.A4.BLACK, false, -1);
-        testJob.addTask(Paper.A4.COLOR, false, 1);
 
         int actual = PaperPriceCalc.getJobPrice(testJob);
-        Assert.assertEquals(expected, actual);
-    }
-
-    @Test
-    public void getTaskPrice_negativePageCount()
-    {
-        PrintJob testJob = new PrintJob();
-        testJob.addTask(Paper.A4.BLACK, false, -1);
-        testJob.addTask(Paper.A4.COLOR, false, 1);
-        
-        int expected = Price.PRICE_INVALID;
-        int actual = PaperPriceCalc.getTaskPrice(testJob.jobList().get(0));
         Assert.assertEquals(expected, actual);
     }
 

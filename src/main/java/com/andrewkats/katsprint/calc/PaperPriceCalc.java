@@ -8,25 +8,32 @@ import com.andrewkats.katsprint.data.PrintJob.PrintTask;
 public final class PaperPriceCalc
 {
     public static int getJobPrice(PrintJob printJob) 
-    { 
-        int jobSize = printJob.jobList().size();
-        int totalPrice = 0;
+    {
+        if(printJob == null) return Price.PRICE_INVALID;
 
+        int jobSize = printJob.jobList().size();
+        if(jobSize <= 0) return Price.PRICE_INVALID;
+
+        int totalPrice = 0;
         for(int i = 0; i < jobSize; i++)
         {
             PrintTask tPrintTask = printJob.jobList().get(i);
-            totalPrice += getTaskPrice(tPrintTask);
-        }
+            int paperPrice = getTaskPrice(tPrintTask);
+            totalPrice += paperPrice;
 
+            // Perform a validation check to ensure correct data.
+            if(paperPrice <= 0 || paperPrice == Price.PRICE_INVALID) return Price.PRICE_INVALID;
+        }
         return totalPrice; 
     }
     
     protected static int getTaskPrice(PrintTask printTask) 
     { 
         if(printTask == null) return Price.PRICE_INVALID;
+        if(printTask.pageCount() <= 0) return Price.PRICE_INVALID;
 
         int paperPrice = getPrice(printTask.paperType(), printTask.isDoubleSided());
-        if(paperPrice <= 0) return Price.PRICE_INVALID;
+        if(paperPrice <= 0 || paperPrice == Price.PRICE_INVALID) return Price.PRICE_INVALID;
         
         return paperPrice * printTask.pageCount();
     }
